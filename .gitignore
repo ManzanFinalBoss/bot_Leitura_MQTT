@@ -1,0 +1,9 @@
+# Ignorar variáveis secretas
+.env
+
+# Ignorar arquivos compilados do Python
+__pycache__/
+*.pyc
+
+# Ignorar configurações locais do VS Code
+.vscode/
