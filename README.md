@@ -22,7 +22,7 @@ e armazená-las em um banco de dados PostgreSQL para posterior análise via Graf
 bot_Leitura_MQTT/                         ← pasta principal do projeto
 ├── bots/                                 ← subpasta onde ficarão os bots individuais
 │   └── __init__.py                       ← arquivo vazio para reconhecer 'bots' como módulo Python
-├── config.py  leg                           ← script que carrega variáveis do .env (banco, MQTT, etc.)
+├── config.py                             ← script que carrega variáveis do .env (banco, MQTT, etc.)
 ├── env.txt                               ← modelo de preenchimento do arquivo .env (sem dados sensíveis)
 ├── main.py                               ← bot pai, que orquestra os bots
 ├── README.md                             ← documentação do projeto
@@ -62,7 +62,8 @@ Posteriormente, são utilizados para geração de dashboards e análises no Graf
 - ✅ Estrutura de arquivos organizada  
 - 🔄 Aguardando definição dos tópicos MQTT
 - ⏳ Bots em desenvolvimento (um por variável/função)  
-- ☁️ Deploy na nuvem programado (Render ou Railway)  
+- ☁️ Deploy na nuvem programado (Render ou Railway) 
+- ⏳ mudança drastica no funcionamento do projeto, lembrar de modificar com os novos tópicos e dados os bots
 
 ---
 

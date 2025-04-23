@@ -17,6 +17,6 @@ MQTT_CONFIG = {
     "broker": os.getenv("MQTT_BROKER"),
     "port": int(os.getenv("MQTT_PORT")),
     "topics": [
-        os.getenv("MQTT_TOPICO_1")
+        os.getenv("MQTT_TOPICO_1"),
     ]
 }
