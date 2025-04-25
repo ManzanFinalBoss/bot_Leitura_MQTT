@@ -6,7 +6,8 @@ def criar_tabela_falhas():
     CREATE TABLE IF NOT EXISTS falhas (
         id SERIAL PRIMARY KEY,
         inicio_falha TIMESTAMP NOT NULL,
-        fim_falha TIMESTAMP NOT NULL
+        fim_falha TIMESTAMP NOT NULL,
+        tempo_falha INTERVAL GENERATED ALWAYS AS (fim_falha - inicio_falha) STORED
     );
     """
     try:

@@ -1,7 +1,7 @@
 import psycopg2
 from config import DB_CONFIG
 
-def inserir_producao(inicio, fim, tempo_total, qualidade):
+def inserir_ciclo(inicio, fim, tempo_total, qualidade):
     try:
         # Conecta ao banco
         conn = psycopg2.connect(**DB_CONFIG)
@@ -9,7 +9,7 @@ def inserir_producao(inicio, fim, tempo_total, qualidade):
 
         # Executa o INSERT na tabela correta
         cur.execute("""
-        INSERT INTO producao_pecas (inicio_prod, fim_prod, qualidade)
+        INSERT INTO ciclo_pecas (inicio_ciclo, fim_ciclo, qualidade)
         VALUES (%s, %s, %s)
         """, (inicio, fim, qualidade))
 
@@ -19,7 +19,7 @@ def inserir_producao(inicio, fim, tempo_total, qualidade):
         conn.commit()
         cur.close()
         conn.close()
-        print("✅ [PRODUCAO] Dados inseridos com sucesso!")
+        print("✅ [CICLO] Dados inseridos com sucesso!")
 
     except Exception as e:
-        print(f"❌ [PRODUCAO] Erro ao inserir dados: {e}")
+        print(f"❌ [CICLO] Erro ao inserir dados: {e}")
