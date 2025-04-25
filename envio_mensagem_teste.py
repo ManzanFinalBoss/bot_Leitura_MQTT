@@ -4,69 +4,109 @@ import json
 import paho.mqtt.publish as publish
 from config import MQTT_CONFIG
 
-def enviar_json():
+def enviar_dados():
     try:
-        # Coleta os dados do formulário
-        payload = {
-            "InicioProd": var_inicio_prod.get(),
-            "FimProd": var_fim_prod.get(),
-            "InicioFalha": var_inicio_falha.get(),
-            "FimFalha": var_fim_falha.get(),
-            "InicioCiclo": var_inicio_ciclo.get(),
-            "FimCiclo": var_fim_ciclo.get(),
-            "ControleQualidade": int(entry_qualidade.get()) if entry_qualidade.get() else "",
-            "ConsumoAr": float(entry_consumo_ar.get()) if entry_consumo_ar.get() else "",
-            "ConsumoEnergia": float(entry_consumo_energia.get()) if entry_consumo_energia.get() else ""
-        }
+        payload_dict = {}
 
-        mensagem = json.dumps(payload)
+        # Enviar JSON se houver dados preenchidos
+        if entry_consumo_energia.get():
+            payload_dict["ConsumoEnergia (mWh)"] = float(entry_consumo_energia.get())
+        if entry_consumo_ar.get():
+            payload_dict["ConsumoAr"] = float(entry_consumo_ar.get())
 
-        publish.single(
-            topic=MQTT_CONFIG["topics"][0],
-            payload=mensagem,
-            hostname=MQTT_CONFIG["broker"],
-            port=MQTT_CONFIG["port"]
-        )
+        if payload_dict:
+            mensagem_json = json.dumps(payload_dict)
+            publish.single(
+                topic=MQTT_CONFIG["topics"][0],
+                payload=mensagem_json,
+                hostname=MQTT_CONFIG["broker"],
+                port=MQTT_CONFIG["port"]
+            )
+            print(f"✅ JSON enviado:\n{mensagem_json}")
 
-        messagebox.showinfo("Sucesso", "Mensagem enviada com sucesso!")
+        # Flags booleanas enviadas como STRING
+        flags = []
+
+        if var_bproducao_true.get():
+            flags.append("{bProducao: TRUE}")
+        elif var_bproducao_false.get():
+            flags.append("{bProducao: FALSE}")
+
+        if var_bciclo_true.get():
+            flags.append("{bCiclo: TRUE}")
+        elif var_bciclo_false.get():
+            flags.append("{bCiclo: FALSE}")
+
+        if var_bpecas_defeito_true.get():
+            flags.append("{bPecasDefeito: TRUE}")
+        elif var_bpecas_defeito_false.get():
+            flags.append("{bPecasDefeito: FALSE}")
+
+        if var_bdetec_vazamento_true.get():
+            flags.append("{bDetecVazamento: TRUE}")
+        elif var_bdetec_vazamento_false.get():
+            flags.append("{bDetecVazamento: FALSE}")
+
+        # Enviar uma a uma
+        for flag in flags:
+            publish.single(
+                topic=MQTT_CONFIG["topics"][0],
+                payload=flag,
+                hostname=MQTT_CONFIG["broker"],
+                port=MQTT_CONFIG["port"]
+            )
+            print(f"✅ String enviada: {flag}")
+
+        if not payload_dict and not flags:
+            messagebox.showwarning("Atenção", "Nenhum dado preenchido ou selecionado para envio!")
+        else:
+            messagebox.showinfo("Sucesso", "Todos os dados enviados com sucesso!")
 
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao enviar: {e}")
 
 # GUI
 root = tk.Tk()
-root.title("Envio Tópico 1")
+root.title("Envio de Dados (JSON + String com TRUE/FALSE)")
 
-# Variáveis booleanas
-var_inicio_prod = tk.BooleanVar()
-var_fim_prod = tk.BooleanVar()
-var_inicio_falha = tk.BooleanVar()
-var_fim_falha = tk.BooleanVar()
-var_inicio_ciclo = tk.BooleanVar()
-var_fim_ciclo = tk.BooleanVar()
-
-# Checkboxes (ordem solicitada)
-tk.Checkbutton(root, text="InicioProd", variable=var_inicio_prod).grid(row=0, column=0, sticky="w")
-tk.Checkbutton(root, text="FimProd", variable=var_fim_prod).grid(row=1, column=0, sticky="w")
-tk.Checkbutton(root, text="InicioFalha", variable=var_inicio_falha).grid(row=2, column=0, sticky="w")
-tk.Checkbutton(root, text="FimFalha", variable=var_fim_falha).grid(row=3, column=0, sticky="w")
-tk.Checkbutton(root, text="InicioCiclo", variable=var_inicio_ciclo).grid(row=4, column=0, sticky="w")
-tk.Checkbutton(root, text="FimCiclo", variable=var_fim_ciclo).grid(row=5, column=0, sticky="w")
-
-# Entradas numéricas
-tk.Label(root, text="ControleQualidade (0 ou 1):").grid(row=6, column=0, sticky="w")
-entry_qualidade = tk.Entry(root)
-entry_qualidade.grid(row=6, column=1)
-
-tk.Label(root, text="ConsumoAr (ex: 12.34):").grid(row=7, column=0, sticky="w")
-entry_consumo_ar = tk.Entry(root)
-entry_consumo_ar.grid(row=7, column=1)
-
-tk.Label(root, text="ConsumoEnergia (ex: 45.67):").grid(row=8, column=0, sticky="w")
+# Entradas para JSON
+tk.Label(root, text="ConsumoEnergia (mWh):").grid(row=0, column=0, sticky="w")
 entry_consumo_energia = tk.Entry(root)
-entry_consumo_energia.grid(row=8, column=1)
+entry_consumo_energia.grid(row=0, column=1)
+
+tk.Label(root, text="ConsumoAr:").grid(row=1, column=0, sticky="w")
+entry_consumo_ar = tk.Entry(root)
+entry_consumo_ar.grid(row=1, column=1)
+
+# Cabeçalho para flags booleanas
+tk.Label(root, text="Sinal").grid(row=2, column=0, pady=(10, 0))
+tk.Label(root, text="TRUE").grid(row=2, column=1, pady=(10, 0))
+tk.Label(root, text="FALSE").grid(row=2, column=2, pady=(10, 0))
+
+# Função para criar linha de checkboxes TRUE/FALSE por flag
+def criar_linha(nome, linha, var_true, var_false):
+    tk.Label(root, text=nome).grid(row=linha, column=0, sticky="w")
+    tk.Checkbutton(root, variable=var_true).grid(row=linha, column=1)
+    tk.Checkbutton(root, variable=var_false).grid(row=linha, column=2)
+
+# Variáveis para cada flag
+var_bproducao_true = tk.BooleanVar()
+var_bproducao_false = tk.BooleanVar()
+criar_linha("bProducao", 3, var_bproducao_true, var_bproducao_false)
+
+var_bciclo_true = tk.BooleanVar()
+var_bciclo_false = tk.BooleanVar()
+criar_linha("bCiclo", 4, var_bciclo_true, var_bciclo_false)
+
+var_bpecas_defeito_true = tk.BooleanVar()
+var_bpecas_defeito_false = tk.BooleanVar()
+criar_linha("bPecasDefeito", 5, var_bpecas_defeito_true, var_bpecas_defeito_false)
+
+var_bdetec_vazamento_true = tk.BooleanVar()
+var_bdetec_vazamento_false = tk.BooleanVar()
+criar_linha("bDetecVazamento", 6, var_bdetec_vazamento_true, var_bdetec_vazamento_false)
 
 # Botão de envio
-tk.Button(root, text="Enviar", command=enviar_json).grid(row=9, column=0, columnspan=2, pady=10)
+tk.Button(root, text="Enviar", command=enviar_dados).grid(row=7, column=0, columnspan=3, pady=15)
 
 root.mainloop()

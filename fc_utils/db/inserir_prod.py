@@ -9,7 +9,7 @@ def inserir_prod(inicio_prod, fim_prod, tempo_prod):
 
         # Executa o INSERT
         cur.execute("""
-            INSERT INTO producao (inicio_prod, fim_prod)
+            INSERT INTO produção (inicio_prod, fim_prod)
             VALUES (%s, %s)
         """, (inicio_prod, fim_prod))
 
