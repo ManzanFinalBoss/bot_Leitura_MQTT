@@ -5,10 +5,10 @@ def criar_tabela_ciclo():
     comando_sql = """
     CREATE TABLE IF NOT EXISTS ciclo_pecas (
         id SERIAL PRIMARY KEY,
-        inicio_ciclo TIMESTAMP NOT NULL,
-        fim_ciclo TIMESTAMP NOT NULL,
+        inicio_ciclo TIMESTAMP,
+        fim_ciclo TIMESTAMP,
         tempo_ciclo INTERVAL GENERATED ALWAYS AS (fim_ciclo - inicio_ciclo) STORED,
-        qualidade INT NOT NULL
+        qualidade INT
     );
     """
     try:

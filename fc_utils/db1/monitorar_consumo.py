@@ -1,5 +1,5 @@
 from datetime import datetime
-from fc_utils.db.inserir_consumo import inserir_consumo
+from fc_utils.db1.inserir_consumo import inserir_consumo
 
 def monitorar_consumo(dados):
     if "ConsumoAr" in dados or "ConsumoEnergia" in dados:

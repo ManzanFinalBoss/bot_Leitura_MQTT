@@ -1,5 +1,5 @@
 from datetime import datetime
-from fc_utils.db.inserir_falha import inserir_falha
+from fc_utils.db1.inserir_falha import inserir_falha
 
 # Variáveis temporárias para armazenar dados entre mensagens
 inicio_falha = None

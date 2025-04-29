@@ -47,6 +47,12 @@ def enviar_dados():
         elif var_bdetec_vazamento_false.get():
             flags.append("{bDetecVazamento: FALSE}")
 
+        # Simulação de Peça
+        if var_simulacao_peca_ok.get():
+            flags.append("{bPecasOK: TRUE}")
+        elif var_simulacao_peca_defeito.get():
+            flags.append("{bPecasDefeito: TRUE}")
+
         # Enviar uma a uma
         for flag in flags:
             publish.single(
@@ -106,7 +112,22 @@ var_bdetec_vazamento_true = tk.BooleanVar()
 var_bdetec_vazamento_false = tk.BooleanVar()
 criar_linha("bDetecVazamento", 6, var_bdetec_vazamento_true, var_bdetec_vazamento_false)
 
+# Espaçamento
+tk.Label(root, text="").grid(row=7)
+
+# Cabeçalho para Simulação de Peça
+tk.Label(root, text="Simulação de Peça").grid(row=8, column=0, pady=(10, 0))
+tk.Label(root, text="OK (bPecasOK)").grid(row=8, column=1, pady=(10, 0))
+tk.Label(root, text="Defeito (bPecasDefeito)").grid(row=8, column=2, pady=(10, 0))
+
+# Variáveis para Simulação de Peça
+var_simulacao_peca_ok = tk.BooleanVar()
+var_simulacao_peca_defeito = tk.BooleanVar()
+
+tk.Checkbutton(root, variable=var_simulacao_peca_ok).grid(row=9, column=1)
+tk.Checkbutton(root, variable=var_simulacao_peca_defeito).grid(row=9, column=2)
+
 # Botão de envio
-tk.Button(root, text="Enviar", command=enviar_dados).grid(row=7, column=0, columnspan=3, pady=15)
+tk.Button(root, text="Enviar", command=enviar_dados).grid(row=10, column=0, columnspan=3, pady=15)
 
 root.mainloop()

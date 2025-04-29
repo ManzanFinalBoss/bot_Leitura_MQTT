@@ -6,7 +6,7 @@ def criar_tabela_produção():
     CREATE TABLE IF NOT EXISTS produção (
         id SERIAL PRIMARY KEY,
         inicio_prod TIMESTAMP NOT NULL,
-        fim_prod TIMESTAMP NOT NULL,
+        fim_prod TIMESTAMP,
         tempo_prod INTERVAL GENERATED ALWAYS AS (fim_prod - inicio_prod) STORED
     );
     """

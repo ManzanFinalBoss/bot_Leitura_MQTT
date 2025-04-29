@@ -1,10 +1,11 @@
 import paho.mqtt.client as mqtt
 from fc_utils.py.on_connect import gerar_on_connect
 from fc_utils.py.on_message import gerar_on_message
-from fc_utils.db.criar_tabela_consumo import criar_tabela_consumo
-from fc_utils.db.criar_tabela_falhas import criar_tabela_falhas
-from fc_utils.db.criar_tabela_produção import criar_tabela_produção
-from fc_utils.db.criar_tabela_ciclo import criar_tabela_ciclo
+from fc_utils.db1.criar_tabela_consumo import criar_tabela_consumo
+from fc_utils.db1.criar_tabela_falhas import criar_tabela_falhas
+from fc_utils.db1.criar_tabela_produção import criar_tabela_produção
+from fc_utils.db1.criar_tabela_ciclo import criar_tabela_ciclo
+from fc_utils.db1.criar_tabela_oee import criar_tabela_oee
 
 
 def iniciar_bot(broker, port, topic):
@@ -20,4 +21,6 @@ def iniciar_bot(broker, port, topic):
     criar_tabela_ciclo()
     criar_tabela_consumo()
     criar_tabela_falhas()
+    criar_tabela_oee()
+
  
