@@ -1,6 +1,7 @@
 import psycopg2
 from config import DB_CONFIG
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 def inserir_consumo(consumo_ar, consumo_energia, horario=None):
     try:
@@ -8,7 +9,11 @@ def inserir_consumo(consumo_ar, consumo_energia, horario=None):
         cur = conn.cursor()
 
         if horario is None:
-            horario = datetime.now()
+            horario = datetime.now(ZoneInfo("America/Sao_Paulo"))
+
+        # Garantir que o horário está com fuso de SP explicitamente
+        if horario.tzinfo is None:
+            horario = horario.replace(tzinfo=ZoneInfo("America/Sao_Paulo"))
 
         cur.execute("""
             INSERT INTO consumo (horario, consumo_ar, consumo_energia)
@@ -18,7 +23,7 @@ def inserir_consumo(consumo_ar, consumo_energia, horario=None):
         conn.commit()
         cur.close()
         conn.close()
-        print("💧 [CONSUMO] Dados inseridos com sucesso!")
+        print(f"💧 [CONSUMO] Dados inseridos com sucesso! Horário registrado: {horario}")
 
     except Exception as e:
         print(f"❌ [CONSUMO] Erro ao inserir dados: {e}")

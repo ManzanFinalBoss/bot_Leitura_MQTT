@@ -2,3 +2,4 @@ paho-mqtt
 psycopg2
 python-dotenv
 schedule
+tzdata
